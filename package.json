@@ -1,0 +1,35 @@
+{
+  "name": "el_test2",
+  "version": "1.0.1",
+  "description": "xxx",
+  "main": "elec/main.js",
+  "homepage": "./",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build":"electron-builder --win --x64"
+  },
+  "keywords": [
+    "master tool"
+  ],
+  "author": "Zhou",
+  "license": "ISC",
+  "build": {
+    "productName":"Master Tool",
+    "appId": "master.tool",
+    "copyright":"master",
+    "directories": {
+      "output": "out"
+    }, 
+    "win": {
+      "icon": "./public/app.png",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "ia32"
+          ]
+        }
+      ]
+    }
+  }
+}

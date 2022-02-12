@@ -1,0 +1,30 @@
+
+.bg {
+  margin-top: 5em;
+  margin-left: 10em;
+}
+
+.background {
+  width: 1400px;
+  height: 500px;
+}
+
+.background::after {
+  content: "";
+  background-image: url('./dell-logo.svg');
+  background-repeat: no-repeat;
+  opacity: 0.1;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+  z-index: -1;
+}
+
+.old{
+  background-color: #ffccc7;
+}
