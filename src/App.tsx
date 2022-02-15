@@ -1,10 +1,10 @@
 /*
  * @Author: your name
  * @Date: 2022-02-04 08:11:20
- * @LastEditTime: 2022-02-12 07:48:43
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-02-15 11:05:51
+ * @LastEditors: JavoData
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- * @FilePath: /antd-demo-ts/src/App.tsx
+ * @FilePath: /master-tool/src/App.tsx
  */
 import React, { useRef, useState } from 'react';
 import './App.css';
@@ -16,7 +16,7 @@ import { InboxOutlined } from '@ant-design/icons';
 import { RcFile } from 'antd/lib/upload';
 import { db } from './db';
 import copy from 'copy-to-clipboard';
-
+import _ from 'lodash';
 const { Dragger } = Upload;
 
 
@@ -139,6 +139,15 @@ function App() {
   const [tab, setTab] = useState('tab1');
   const actionRef = useRef<ActionType>();
 
+  function getDataRange(data: any) {
+    const dataWithValues = _.pickBy(data, (value: { v: any; }, key: any) => !!value.v)
+    const cellNamesWithValues = _.keys(dataWithValues)
+    const cellsWithValues = cellNamesWithValues.map((cell: any) => XLSX.utils.decode_cell(cell))
+    const maxRow = _.max(cellsWithValues.map((cell: { r: any; }) => cell.r))
+    const maxColumn = _.max(cellsWithValues.map((cell: { c: any; }) => cell.c))
+    const lastCellName = XLSX.utils.encode_cell({ c: maxColumn, r: maxRow })
+    return `A1:${lastCellName}`
+  }
   function importExcelFromBuffer<Item = any>(excelRcFileBuffer: ArrayBuffer): Item[] {
     // 读取表格对象
     const workbook = XLSX.read(excelRcFileBuffer, { type: 'buffer' });
@@ -149,6 +158,7 @@ function App() {
     let data: any[] = []
     for (let sheet in workbook.Sheets) {
       if (workbook.Sheets.hasOwnProperty(sheet)) {
+        workbook.Sheets[sheet]['!ref'] = getDataRange(workbook.Sheets[sheet])
         const xlsData=XLSX.utils.sheet_to_json(workbook.Sheets[sheet]) as any[]
         const temp = xlsData.map(item => {
           const obj: MasterItem = {
